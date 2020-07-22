@@ -20,6 +20,8 @@ def data_collection():
     X = []
     Y = []
     Z = []
+    device.write_data(0x28, 0x00)
+    #print("filter_setting", device.read_date(0x28))
     N = 4096
     #overrun = 2048
     index=0
