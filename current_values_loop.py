@@ -85,7 +85,7 @@ def data_analysis():
     plt.grid(which = "both")
     #2つ目。加速度の時系列グラフ:Y-axis
     plt.subplot(2, 3, 2)
-    plt.plot(pcs,Y, label = 'Y', color = "darkorange")
+    plt.plot(pcs,Y, label = "Y", color = "darkorange")
     plt.xlabel("Sample Number.Y-axis(pcs)", fontsize = 8)
     plt.legend(bbox_to_anchor=(1, 1), loc="upper right", borderaxespad = 0, fontsize = 8)
     plt.axis([0, N, -6,6])
@@ -94,7 +94,7 @@ def data_analysis():
     plt.grid(which = "both")
     #3つ目。加速度の時系列グラフ:Z-axis
     plt.subplot(2, 3, 3)
-    plt.plot(pcs,Z, label = 'Z', color = "green")
+    plt.plot(pcs,Z, label = "Z", color = "green")
     plt.xlabel("Sample Number.Z-axis(pcs)", fontsize = 8)
     plt.legend(bbox_to_anchor=(1, 1), loc="upper right", borderaxespad = 0, fontsize = 8)
     plt.axis([0, N, -6,6])
@@ -102,15 +102,41 @@ def data_analysis():
     plt.yticks(fontsize = 7)
     plt.grid(which = "both")
     
-    #2つ目。FFTグラフ。z軸
-    plt.subplot(2, 1, 2)
-    plt.plot(frequency,np.abs(FFT_Z),color = 'green')
-    plt.xlabel('freqency.Z-axis(Hz)',fontsize=8)
-    plt.ylabel('amplitude',fontsize=8)
+    #4つ目。FFTグラフ。X-axis
+    plt.subplot(2, 3, 4)
+    plt.plot(frequency, np.abs(FFT_X), label = "X", color = "blue")
+    plt.xlabel("freqency.X-axis(Hz)", fontsize=8)
+    plt.ylabel('amplitude_spectrum',fontsize=8)
+    plt.legend(bbox_to_anchor=(1, 1), loc="upper right", borderaxespad = 0, fontsize = 8)
     plt.axis([0,1/dt/2, 0.001,1000])  #x,y軸のレンジ固定
-    plt.subplots_adjust(wspace=0.3,hspace=0.3)  #隣接グラフとの隙間
+    plt.subplots_adjust(wspace=0.3, hspace=0.3)  #隣接グラフとの隙間
+    plt.xticks(fontsize = 7)
+    plt.yticks(fontsize = 7)
     plt.grid(which="both")
     plt.yscale("log")
+    #5つ目。FFTグラフ。Y-axis
+    plt.subplot(2, 3, 5)
+    plt.plot(frequency, np.abs(FFT_Y), label = "Y", color = "darkorange")
+    plt.xlabel("freqency.Y-axis(Hz)", fontsize=8)
+    plt.legend(bbox_to_anchor=(1, 1), loc="upper right", borderaxespad = 0, fontsize = 8)
+    plt.axis([0,1/dt/2, 0.001,1000])  #x,y軸のレンジ固定
+    plt.subplots_adjust(wspace=0.3, hspace=0.3)  #隣接グラフとの隙間
+    plt.xticks(fontsize = 7)
+    plt.yticks(fontsize = 7)
+    plt.grid(which="both")
+    plt.yscale("log")
+    #6つ目。FFTグラフ。Z-axis
+    plt.subplot(2, 3, 6)
+    plt.plot(frequency, np.abs(FFT_Z), label = "Z", color = "green")
+    plt.xlabel("freqency.Z-axis(Hz)", fontsize=8)
+    plt.legend(bbox_to_anchor=(1, 1), loc="upper right", borderaxespad = 0, fontsize = 8)
+    plt.axis([0,1/dt/2, 0.001,1000])  #x,y軸のレンジ固定
+    plt.subplots_adjust(wspace=0.3, hspace=0.3)  #隣接グラフとの隙間
+    plt.xticks(fontsize = 7)
+    plt.yticks(fontsize = 7)
+    plt.grid(which="both")
+    plt.yscale("log")
+    
     #グラフ出力
     #plt.savefig('/home/pi/Documents/adxl355/adxl355_data/'+filename+'.png')
     plt.draw()
@@ -122,14 +148,15 @@ def data_analysis():
         #writer = csv.writer(f, lineterminator="\n")
         #writer.writerows([X, Y, Z])
     #print('/home/pi/Documents/adxl355/adxl355_data/'+filename+'.csv', 'saved')
-    t4 = time.time()
+    t5 = time.time()
 
     #text出力
     #np.savetxt('/home/pi/Documents/adxl355/adxl355_data/'+filename+'frequency', frequency, delimiter = " ", fmt='%.2f')
     #np.savetxt('/home/pi/Documents/adxl355/adxl355_data/'+filename+'amplitude', np.abs(FFT_Z), delimiter = " ", fmt='%.4f')
-    t5 = time.time()
+    t6 = time.time()
 
 while True:
     data_collection()
     data_analysis()
     print("t2-t1",t2-t1)
+    print("t6-t3",t6-t3)
