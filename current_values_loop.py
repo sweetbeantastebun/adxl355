@@ -34,16 +34,32 @@ def data_collection():
         t2 = time.time()
 
 def data_analysis():
+    global t3
+    global t4
+    global t5
+    global t6
+    t3 = time.time()
     timestamp = datetime.today()
     filename = str(timestamp.year) + str(timestamp.month) + str(timestamp.day) + "_" + str(timestamp.hour) + str(timestamp.minute) + "_" + str(timestamp.second) + "." + str(timestamp.microsecond)
-    dt = 0.001 #サンプリングレート1msec
+    dt = 0.0005 #サンプリングレート0.5msec(1000Hz)
     #dt = 0.000025
     
     #時間軸(サンプル数)
     #t = np.arange(0, N*dt, dt)  #(開始、終了、分割数)
     pcs = np.arange(0, N)
 
-    #Z軸のFFT化
+    #FFT
+    #X軸
+    #FFT_X = np.fft.fft(X)
+    samples = 256  #サンプル数を指定 #256データの周波数分解能は4Hz
+    FFT_X = np.fft.fft(X[0:samples])  #2次元配列(実部，虚部)
+    FFT_X = FFT_X[:int(FFT_X.shape[0]/2)]    #スペクトルがマイナスになるスペクトル要素の削除
+    #Y軸
+    #FFT_Y = np.fft.fft(Y)
+    samples = 256  #サンプル数を指定 #256データの周波数分解能は4Hz
+    FFT_Y = np.fft.fft(Y[0:samples])  #2次元配列(実部，虚部)
+    FFT_Y = FFT_Y[:int(FFT_Y.shape[0]/2)]    #スペクトルがマイナスになるスペクトル要素の削除
+    #Z軸
     #FFT_Z = np.fft.fft(Z)
     samples = 256  #サンプル数を指定 #256データの周波数分解能は4Hz
     FFT_Z = np.fft.fft(Z[0:samples])  #2次元配列(実部，虚部)
@@ -52,21 +68,40 @@ def data_analysis():
     frequency = np.linspace(0, 1.0/dt, samples)  #(開始、終了、分割数)
     frequency = frequency[:int(frequency.shape[0]/2)]    #周波数がマイナスになる周波数要素の削除 
     #print("frequency",len(frequency))
-    t3 = time.time()
+    t4 = time.time()
 
     #グラフ化
     plt.ion()
     plt.clf()
-    #１つ目。加速度の時系列グラフ
-    plt.subplot(2, 1, 1)
-    plt.xlabel('Number(pcs)',fontsize=8)
-    plt.ylabel('acceleration(G)',fontsize=8)
-    plt.plot(pcs,X, label = 'X')
-    plt.plot(pcs,Y, label = 'Y')
-    plt.plot(pcs,Z, label = 'Z')
-    plt.legend(loc = 'center right')
-    plt.axis([0, N, -2,2])
-    plt.grid(which="both")
+    #１つ目。加速度の時系列グラフ:X-axis
+    plt.subplot(2, 3, 1)
+    plt.plot(pcs,X, label = "X", color = "blue")
+    plt.xlabel("Sample Number.X-axis(pcs)", fontsize = 8)
+    plt.ylabel("acceleration(G)", fontsize = 8)
+    plt.legend(bbox_to_anchor=(1, 1), loc="upper right", borderaxespad = 0, fontsize = 8)
+    plt.axis([0, N, -6,6])
+    plt.xticks(fontsize = 7)
+    plt.yticks(fontsize = 7)
+    plt.grid(which = "both")
+    #2つ目。加速度の時系列グラフ:Y-axis
+    plt.subplot(2, 3, 2)
+    plt.plot(pcs,Y, label = 'Y', color = "darkorange")
+    plt.xlabel("Sample Number.Y-axis(pcs)", fontsize = 8)
+    plt.legend(bbox_to_anchor=(1, 1), loc="upper right", borderaxespad = 0, fontsize = 8)
+    plt.axis([0, N, -6,6])
+    plt.xticks(fontsize = 7)
+    plt.yticks(fontsize = 7)
+    plt.grid(which = "both")
+    #3つ目。加速度の時系列グラフ:Z-axis
+    plt.subplot(2, 3, 3)
+    plt.plot(pcs,Z, label = 'Z', color = "green")
+    plt.xlabel("Sample Number.Z-axis(pcs)", fontsize = 8)
+    plt.legend(bbox_to_anchor=(1, 1), loc="upper right", borderaxespad = 0, fontsize = 8)
+    plt.axis([0, N, -6,6])
+    plt.xticks(fontsize = 7)
+    plt.yticks(fontsize = 7)
+    plt.grid(which = "both")
+    
     #2つ目。FFTグラフ。z軸
     plt.subplot(2, 1, 2)
     plt.plot(frequency,np.abs(FFT_Z),color = 'green')
