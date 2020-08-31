@@ -9,6 +9,13 @@ from adxl355 import ADXL355  # pylint: disable=wrong-import-position
 device = ADXL355()            # pylint: disable=invalid-name
 #t0 = time.time()
 
+Temperature_Response = device.read_data(0x06) <<8 | device.read_data(0x07)
+Temperature = (Temperature_Response - 1852) / (-9.05) + 25
+print("Temperature[degC]", int(Temperature))
+
+device.write_data(0x28, 0x02)  #LowPass-filter #0x02:ODR1kHz/LPF250Hz
+#print("filter_setting", device.read_data(0x28))
+
 def data_collection():
     global t1
     global t2
@@ -19,10 +26,8 @@ def data_collection():
     t1 = time.time()
     X = []
     Y = []
-    Z = []
-    device.write_data(0x28, 0x00)
-    #print("filter_setting", device.read_data(0x28))
-    N = 4096
+    Z = []    
+    N = 512
     #overrun = 2048
     index=0
     while index < N:
@@ -31,6 +36,7 @@ def data_collection():
         Y.append(axes[1])
         Z.append(axes[2])
         index += 1
+        time.sleep(0.0007)
         t2 = time.time()
 
 def data_analysis():
@@ -41,7 +47,7 @@ def data_analysis():
     t3 = time.time()
     timestamp = datetime.today()
     filename = str(timestamp.year) + str(timestamp.month) + str(timestamp.day) + "_" + str(timestamp.hour) + str(timestamp.minute) + "_" + str(timestamp.second) + "." + str(timestamp.microsecond)
-    dt = 0.0005 #サンプリングレート0.5msec(1000Hz)
+    dt = 0.001 #サンプリングレート0.5msec(1000Hz)
     #dt = 0.000025
     
     #時間軸(サンプル数)
@@ -49,19 +55,20 @@ def data_analysis():
     pcs = np.arange(0, N)
 
     #FFT
+    FFT_samples = 512
     #X軸
     #FFT_X = np.fft.fft(X)
-    samples = 256  #サンプル数を指定 #256データの周波数分解能は4Hz
+    samples = FFT_samples  #サンプル数を指定 #256データの周波数分解能は4Hz
     FFT_X = np.fft.fft(X[0:samples])  #2次元配列(実部，虚部)
     FFT_X = FFT_X[:int(FFT_X.shape[0]/2)]    #スペクトルがマイナスになるスペクトル要素の削除
     #Y軸
     #FFT_Y = np.fft.fft(Y)
-    samples = 256  #サンプル数を指定 #256データの周波数分解能は4Hz
+    samples = FFT_samples  #サンプル数を指定 #256データの周波数分解能は4Hz
     FFT_Y = np.fft.fft(Y[0:samples])  #2次元配列(実部，虚部)
     FFT_Y = FFT_Y[:int(FFT_Y.shape[0]/2)]    #スペクトルがマイナスになるスペクトル要素の削除
     #Z軸
     #FFT_Z = np.fft.fft(Z)
-    samples = 256  #サンプル数を指定 #256データの周波数分解能は4Hz
+    samples = FFT_samples  #サンプル数を指定 #256データの周波数分解能は4Hz
     FFT_Z = np.fft.fft(Z[0:samples])  #2次元配列(実部，虚部)
     FFT_Z = FFT_Z[:int(FFT_Z.shape[0]/2)]    #スペクトルがマイナスになるスペクトル要素の削除
     #周波数軸
@@ -71,11 +78,15 @@ def data_analysis():
     t4 = time.time()
 
     #グラフ化
+    x_axis_range_min = 0
+    x_axis_range_max = 400
+    y_axis_range_min = 0
+    y_axis_range_max = 100
     plt.ion()
     plt.clf()
     #１つ目。加速度の時系列グラフ:X-axis
     plt.subplot(2, 3, 1)
-    plt.plot(pcs,X, label = "X", color = "blue")
+    plt.plot(pcs,X, label = "X", color = "darkorange")
     plt.xlabel("Sample Number.X-axis(pcs)", fontsize = 8)
     plt.ylabel("acceleration(G)", fontsize = 8)
     plt.legend(bbox_to_anchor=(1, 1), loc="upper right", borderaxespad = 0, fontsize = 8)
@@ -85,7 +96,7 @@ def data_analysis():
     plt.grid(which = "both")
     #2つ目。加速度の時系列グラフ:Y-axis
     plt.subplot(2, 3, 2)
-    plt.plot(pcs,Y, label = "Y", color = "darkorange")
+    plt.plot(pcs,Y, label = "Y", color = "green")
     plt.xlabel("Sample Number.Y-axis(pcs)", fontsize = 8)
     plt.legend(bbox_to_anchor=(1, 1), loc="upper right", borderaxespad = 0, fontsize = 8)
     plt.axis([0, N, -6,6])
@@ -94,7 +105,7 @@ def data_analysis():
     plt.grid(which = "both")
     #3つ目。加速度の時系列グラフ:Z-axis
     plt.subplot(2, 3, 3)
-    plt.plot(pcs,Z, label = "Z", color = "green")
+    plt.plot(pcs,Z, label = "Z", color = "blue")
     plt.xlabel("Sample Number.Z-axis(pcs)", fontsize = 8)
     plt.legend(bbox_to_anchor=(1, 1), loc="upper right", borderaxespad = 0, fontsize = 8)
     plt.axis([0, N, -6,6])
@@ -104,43 +115,47 @@ def data_analysis():
     
     #4つ目。FFTグラフ。X-axis
     plt.subplot(2, 3, 4)
-    plt.plot(frequency, np.abs(FFT_X), label = "X", color = "blue")
+    plt.plot(frequency, np.abs(FFT_X), label = "X", color = "darkorange")
     plt.xlabel("freqency.X-axis(Hz)", fontsize=8)
     plt.ylabel('amplitude_spectrum',fontsize=8)
     plt.legend(bbox_to_anchor=(1, 1), loc="upper right", borderaxespad = 0, fontsize = 8)
-    plt.axis([0,1/dt/2, 0.001,1000])  #x,y軸のレンジ固定
+    plt.axis([x_axis_range_min,x_axis_range_max, y_axis_range_min,y_axis_range_max])  #x,y軸のレンジ固定
+    #plt.axis([0,1/dt/2, 0,100])  #x,y軸のレンジ固定
     plt.subplots_adjust(wspace=0.3, hspace=0.3)  #隣接グラフとの隙間
     plt.xticks(fontsize = 7)
     plt.yticks(fontsize = 7)
     plt.grid(which="both")
-    plt.yscale("log")
+    #plt.yscale("log")
     #5つ目。FFTグラフ。Y-axis
     plt.subplot(2, 3, 5)
-    plt.plot(frequency, np.abs(FFT_Y), label = "Y", color = "darkorange")
+    plt.plot(frequency, np.abs(FFT_Y), label = "Y", color = "green")
     plt.xlabel("freqency.Y-axis(Hz)", fontsize=8)
     plt.legend(bbox_to_anchor=(1, 1), loc="upper right", borderaxespad = 0, fontsize = 8)
-    plt.axis([0,1/dt/2, 0.001,1000])  #x,y軸のレンジ固定
+    plt.axis([x_axis_range_min,x_axis_range_max, y_axis_range_min,y_axis_range_max])  #x,y軸のレンジ固定
+    #plt.axis([0,1/dt/2, 0,100])  #x,y軸のレンジ固定
     plt.subplots_adjust(wspace=0.3, hspace=0.3)  #隣接グラフとの隙間
     plt.xticks(fontsize = 7)
     plt.yticks(fontsize = 7)
     plt.grid(which="both")
-    plt.yscale("log")
+    #plt.yscale("log")
     #6つ目。FFTグラフ。Z-axis
     plt.subplot(2, 3, 6)
-    plt.plot(frequency, np.abs(FFT_Z), label = "Z", color = "green")
+    plt.plot(frequency, np.abs(FFT_Z), label = "Z", color = "blue")
     plt.xlabel("freqency.Z-axis(Hz)", fontsize=8)
     plt.legend(bbox_to_anchor=(1, 1), loc="upper right", borderaxespad = 0, fontsize = 8)
-    plt.axis([0,1/dt/2, 0.001,1000])  #x,y軸のレンジ固定
+    plt.axis([x_axis_range_min,x_axis_range_max, y_axis_range_min,y_axis_range_max])  #x,y軸のレンジ固定
+    #plt.axis([0,1/dt/2, 0,100])  #x,y軸のレンジ固定
     plt.subplots_adjust(wspace=0.3, hspace=0.3)  #隣接グラフとの隙間
     plt.xticks(fontsize = 7)
     plt.yticks(fontsize = 7)
     plt.grid(which="both")
-    plt.yscale("log")
+    #plt.yscale("log")
     
     #グラフ出力
     #plt.savefig('/home/pi/Documents/adxl355/adxl355_data/'+filename+'.png')
     plt.draw()
     plt.pause(0.1)
+    
     #plt.close()
     
     #csvに書き込み(w)、出力する(f)
@@ -158,5 +173,5 @@ def data_analysis():
 while True:
     data_collection()
     data_analysis()
-    print("t2-t1",t2-t1)
-    print("t6-t3",t6-t3)
+    #print("t2-t1",t2-t1)
+    #print("t6-t3",t6-t3)
