@@ -176,12 +176,9 @@ def data_analysis():
     #text出力
     #np.savetxt('/home/pi/Documents/adxl355/adxl355_data/'+filename+'frequency', frequency, delimiter = " ", fmt='%.2f')
     #np.savetxt('/home/pi/Documents/adxl355/adxl355_data/'+filename+'amplitude', np.abs(FFT_Z), delimiter = " ", fmt='%.4f')
-    Temperature_Response = device.read_data(0x06) <<8 | device.read_data(0x07)
-    Temperature = (Temperature_Response - 1852) / (-9.05) + 25
-    print("TEMP2", device.read_data(0x06))
-    print("TEMP1", device.read_data(0x07))
-    print("Temperature_Response", Temperature_Response)
-    print("Temperature[degC]", int(Temperature))
+    #Temperature_Response = device.read_data(0x06) <<8 | device.read_data(0x07)
+    #Temperature = (Temperature_Response - 1852) / (-9.05) + 25
+    #print("Temperature[degC]", int(Temperature))
     t6 = time.time()
 
 #data_collection()
