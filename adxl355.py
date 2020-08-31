@@ -22,6 +22,8 @@ ZDATA2 = 0x0F
 ZDATA1 = 0x10
 RANGE = 0x2C  #測定範囲を選択するレジスタ
 POWER_CTL = 0x2D  #測定モードを有効するレジスタ
+TEMP2 = 0x06
+TEMP1 = 0x07
 
 # Data Range
 RANGE_2G = 0x01
@@ -32,7 +34,7 @@ RANGE_8G = 0x03
 READ_BIT = 0x01
 WRITE_BIT = 0x00
 DUMMY_BYTE = 0x00
-MEASURE_MODE = 0x06  #Only accelerometer
+MEASURE_MODE = 0x04  #0x06:Only accelerometer #0x04:TEMP_Onモード
 
 class ADXL355:
     """
