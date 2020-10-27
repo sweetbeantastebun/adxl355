@@ -16,6 +16,16 @@ print("Temperature[degC]", int(Temperature))
 device.write_data(0x28, 0x02)  #LowPass-filter #0x02:ODR1kHz/LPF250Hz
 #print("filter_setting", device.read_data(0x28))
 
+#しきい値を指定
+threshold_value_MAX = -0.6
+#threshold_value_MIN = 0.009
+
+#グラフのレンジ指定
+x_axis_range_min = 0
+x_axis_range_max = 400
+y_axis_range_min = 0
+y_axis_range_max = 100
+
 def data_collection():
     global t1
     global t2
@@ -23,6 +33,7 @@ def data_collection():
     global X
     global Y
     global Z
+    global axes
     t1 = time.time()
     X = []
     Y = []
@@ -44,9 +55,10 @@ def data_analysis():
     global t4
     global t5
     global t6
+    global filename
     t3 = time.time()
     timestamp = datetime.today()
-    filename = str(timestamp.year) + str(timestamp.month) + str(timestamp.day) + "_" + str(timestamp.hour) + str(timestamp.minute) + "_" + str(timestamp.second) + "." + str(timestamp.microsecond)
+    filename = str(timestamp.year) + str(timestamp.month) + str(timestamp.day) + "_" + str(timestamp.hour) + ":" + str(timestamp.minute) + ":" + str(timestamp.second) + "." + str(timestamp.microsecond)
     dt = 0.001 #サンプリングレート0.5msec(1000Hz)
     #dt = 0.000025
     
@@ -78,10 +90,6 @@ def data_analysis():
     t4 = time.time()
 
     #グラフ化
-    x_axis_range_min = 0
-    x_axis_range_max = 400
-    y_axis_range_min = 0
-    y_axis_range_max = 100
     plt.ion()
     plt.clf()
     #１つ目。加速度の時系列グラフ:X-axis
@@ -173,5 +181,7 @@ def data_analysis():
 while True:
     data_collection()
     data_analysis()
+    if axes[2] >= threshold_value_MAX:
+        plt.savefig("/home/pi/Documents/adxl355/adxl355_data/"+filename+"fig_MAX"".png")
     #print("t2-t1",t2-t1)
     #print("t6-t3",t6-t3)
