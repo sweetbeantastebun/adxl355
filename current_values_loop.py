@@ -160,22 +160,22 @@ def data_analysis():
     #plt.yscale("log")
     
     #グラフ出力
-    #plt.savefig('/home/pi/Documents/adxl355/adxl355_data/'+filename+'.png')
+    #plt.savefig("/home/pi/Documents/adxl355/adxl355_data/"+filename+".png")
     plt.draw()
     plt.pause(0.1)
     
     #plt.close()
     
     #csvに書き込み(w)、出力する(f)
-    #with open('/home/pi/Documents/adxl355/adxl355_data/'+filename+'.csv', 'w', newline='', encoding="utf-8") as f:
+    #with open("/home/pi/Documents/adxl355/adxl355_data/"+filename+".csv", "w", newline="", encoding="utf-8") as f:
         #writer = csv.writer(f, lineterminator="\n")
         #writer.writerows([X, Y, Z])
-    #print('/home/pi/Documents/adxl355/adxl355_data/'+filename+'.csv', 'saved')
+    #print("/home/pi/Documents/adxl355/adxl355_data/"+filename+".csv", "saved")
     t5 = time.time()
 
     #text出力
-    #np.savetxt('/home/pi/Documents/adxl355/adxl355_data/'+filename+'frequency', frequency, delimiter = " ", fmt='%.2f')
-    #np.savetxt('/home/pi/Documents/adxl355/adxl355_data/'+filename+'amplitude', np.abs(FFT_Z), delimiter = " ", fmt='%.4f')
+    #np.savetxt("/home/pi/Documents/adxl355/adxl355_data/"+filename+"frequency", frequency, delimiter = " ", fmt="%.2f")
+    #np.savetxt("/home/pi/Documents/adxl355/adxl355_data/"+filename+"amplitude", np.abs(FFT_Z), delimiter = " ", fmt="%.4f")
     t6 = time.time()
 
 while True:
