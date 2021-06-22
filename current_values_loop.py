@@ -43,9 +43,9 @@ def data_collection():
     index=0
     while index < N:
         axes = device.get_axes()  # pylint: disable=invalid-name
-        X.append(axes[0])
-        Y.append(axes[1])
-        Z.append(axes[2])
+        X.append(round(axes[0],4))
+        Y.append(round(axes[1],4))
+        Z.append(round(axes[2],4))
         index += 1
         time.sleep(0.0007)
         t2 = time.time()
