@@ -163,14 +163,7 @@ def data_analysis():
     #plt.savefig("/home/pi/Documents/adxl355/adxl355_data/"+filename+".png")
     plt.draw()
     plt.pause(0.1)
-    
     #plt.close()
-    
-    #csvに書き込み(w)、出力する(f)
-    #with open("/home/pi/Documents/adxl355/adxl355_data/"+filename+".csv", "w", newline="", encoding="utf-8") as f:
-        #writer = csv.writer(f, lineterminator="\n")
-        #writer.writerows([X, Y, Z])
-    #print("/home/pi/Documents/adxl355/adxl355_data/"+filename+".csv", "saved")
     t5 = time.time()
 
     #text出力
@@ -183,5 +176,10 @@ while True:
     data_analysis()
     if axes[2] >= threshold_value_MAX:
         plt.savefig("/home/pi/Documents/adxl355/adxl355_data/"+filename+"fig_MAX"".png")
+        header_items = [["X", "Y", "Z"],[X, Y, Z]]
+        #csvに書き込み(w)、出力する(f)
+        with open("/home/pi/Documents/adxl355/adxl355_data/"+filename+".csv", "w", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f, lineterminator="\n")
+            writer.writerows([X, Y, Z])
     #print("t2-t1",t2-t1)
     #print("t6-t3",t6-t3)
