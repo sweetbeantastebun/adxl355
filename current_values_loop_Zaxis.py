@@ -54,7 +54,7 @@ def data_analysis():
     global t6
     t3 = time.time()
     timestamp = datetime.today()
-    filename = str(timestamp.year) + str(timestamp.month) + str(timestamp.day) + "_" + str(timestamp.hour) + str(timestamp.minute) + "_" + str(timestamp.second) + "." + str(timestamp.microsecond)
+    filename = timestamp.strftime("%Y%m%d%H%M%S")
     dt = 0.001 #サンプリングレート0.5msec(1000Hz)
     #dt = 0.000025
     
