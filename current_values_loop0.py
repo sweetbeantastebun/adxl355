@@ -125,7 +125,7 @@ while True:
         fig.subplots_adjust(wspace=0.3,hspace=0.3)  #隣接グラフとの隙間
         #グラフの図、CSVファイルの出力
         dt_now = datetime.datetime.now()
-        filename = str(dt_now.month) + str(dt_now.day) + str(dt_now.hour) + str(dt_now.minute) + str(dt_now.second)
+        filename = timestamp.strftime("%Y%m%d%H%M%S")
         plt.savefig('/home/pi/Documents/adxl355/adxl355_data/'+filename+'.png')
         print('/home/pi/Documents/adxl355/adxl355_data/'+filename+'.png', 'saved')
         #csvに書き込み(w)、出力する(f)
