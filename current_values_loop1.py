@@ -174,9 +174,9 @@ def data_analysis():
     #csvに書き込み、出力する
     header_names = ["SampleNo.","Z"]
     Data_List = {"SampleNo.":pcs, "Z":Z}
-    df = pd.DataFrame(Data_List) 
-    df = df.round({"Z":4})
-    df.to_csv("/home/pi/Documents/adxl355/adxl355_data/"+filename+".csv")
+    acceleration_value = pd.DataFrame(Data_List) 
+    acceleration_value = acceleration_value.round({"Z":4})
+    acceleration_value.to_csv("/home/pi/Documents/adxl355/adxl355_data/"+filename+".csv")
     """
     t5 = time.time()
     """
@@ -192,9 +192,9 @@ def job():
     #print("RMS", round(RMS,3))
     header_names = ["Date", "RMS"]
     Data_List = {"Date":filename, "RMS":RMS}
-    df = pd.DataFrame(Data_List, index=["0",])  #indexを指定(無いとエラーが発生ValueError: If using all scalar values, you must pass an index)
-    df = df.round({"RMS":3})
-    df.to_csv("/home/pi/Documents/adxl355/adxl355_data/"+filename+".csv")
+    acceleration_value = pd.DataFrame(Data_List, index=["0",])  #indexを指定(無いとエラーが発生ValueError: If using all scalar values, you must pass an index)
+    acceleration_value = acceleration_value.round({"RMS":3})
+    acceleration_value.to_csv("/home/pi/Documents/adxl355/adxl355_data/"+filename+".csv")
     t22 = time.time()
     #print("job", t22-t20)
 
