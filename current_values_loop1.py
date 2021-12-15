@@ -199,8 +199,8 @@ def job():
     #print("job", t22-t20)
 
 #１時間毎に関数jobを実施
-#schedule.every(1).hour.do(job)
-schedule.every(1).minutes.do(job)
+schedule.every(1).hour.do(job)
+#schedule.every(1).minutes.do(job)
 
 while True:
     data_collection()
