@@ -210,9 +210,9 @@ while True:
         #csvに書き込み、出力する(DataFrame)
         header_names = ["Z"]
         Data_List = {"Z":Z}
-        df = pd.DataFrame(Data_List) 
-        df = df.round({"Z":4})
-        df.to_csv("/home/pi/Documents/adxl355/adxl355_data/"+filename+"_MAX"".csv")
+        acceleration_value = pd.DataFrame(Data_List) 
+        acceleration_value = acceleration_value.round({"Z":4})
+        acceleration_value.to_csv("/home/pi/Documents/adxl355/adxl355_data/"+filename+"_MAX"".csv")
     #print("data_collection",t2-t1)
     #print("data_analysis",t6-t3)
     """定期実行の読み出し"""
