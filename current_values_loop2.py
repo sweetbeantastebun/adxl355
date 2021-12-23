@@ -3,7 +3,7 @@ from datetime import datetime  #タイムスタンプに使用するライブラ
 import numpy as np  #配列計算、FFT化する時に使用するライブラリ
 import csv  #csvを作成するライブラリ
 import matplotlib.pyplot as plt  #グラフ化ライブラリ
-import pandas as  pd  #数式、配列を操作するライブラリ
+import pandas as pd  #数式、配列を操作するライブラリ
 import sympy  #代数計算（数式処理）を行うライブラリ
 import schedule  #定期実行ライブラリ
 import sys  #ファイルを読み出したい時に使用するライブラリ
