@@ -7,7 +7,7 @@ import spidev
 # SPI config
 SPI_MAX_CLOCK_HZ = 10000000  #クロック周波数10MHz
 SPI_MODE = 0b00  
-SPI_BUS = 1  #SPI1に接続
+SPI_BUS = 1  #SPI1に接続。ラズパイは0と入力（GPIO24に接続するとき）
 SPI_DEVICE = 0  #加速度センサのID
 
 #Addresses,レジスタの構成をアサイン
