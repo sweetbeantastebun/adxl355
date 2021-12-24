@@ -43,8 +43,8 @@ def EDIT():
 
 #関数の読み出しコマンド
 #schedule.every().day.at("00:00").do(EDIT)
-schedule.every(1).minutes.do(EDIT)
-#schedule.every(1).hour.do(EDIT)
+#schedule.every(1).minutes.do(EDIT)
+schedule.every(1).hour.do(EDIT)
 
 while True:
     #定期実行の読み出し
